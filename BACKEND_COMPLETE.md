@@ -3,6 +3,7 @@
 ## ✅ What We've Built
 
 ### 📁 Project Structure
+
 ```
 payroll-system/backend/
 ├── models/                 # Database schemas
@@ -34,11 +35,13 @@ payroll-system/backend/
 ```
 
 ### 🗄️ Database Setup
+
 - **Database**: `payroll_system` (MongoDB Atlas)
 - **Collections**: `users`, `expenses`, `salaryslips`, `notifications`
 - **Sample Data**: ✅ Seeded with 1 admin + 4 employees
 
 ### 🔐 Authentication & Authorization
+
 - **JWT-based authentication**
 - **Role-based access control** (Admin/Employee)
 - **Password hashing** with bcrypt
@@ -47,6 +50,7 @@ payroll-system/backend/
 ### 📋 API Endpoints
 
 #### Authentication (`/api/auth`)
+
 - `POST /register` - User registration
 - `POST /login` - User login
 - `POST /logout` - User logout
@@ -55,6 +59,7 @@ payroll-system/backend/
 - `POST /refresh-token` - Refresh JWT token
 
 #### Users (`/api/users`)
+
 - `GET /` - Get all users (admin only)
 - `GET /employees` - Get all employees (admin only)
 - `GET /:id` - Get user by ID
@@ -65,6 +70,7 @@ payroll-system/backend/
 - `GET /stats/overview` - User statistics (admin only)
 
 #### Expenses (`/api/expenses`)
+
 - `POST /` - Submit expense (employee only)
 - `GET /` - Get expenses (filtered by role)
 - `GET /:id` - Get expense by ID
@@ -76,6 +82,7 @@ payroll-system/backend/
 - `GET /download/receipt/:id` - Download receipt
 
 #### Salary Slips (`/api/salary-slips`)
+
 - `POST /` - Create salary slip (admin only)
 - `GET /` - Get salary slips (filtered by role)
 - `GET /:id` - Get salary slip by ID
@@ -89,6 +96,7 @@ payroll-system/backend/
 - `GET /employee/:employeeId` - Get employee's salary slips (admin only)
 
 #### Notifications (`/api/notifications`)
+
 - `GET /` - Get user notifications
 - `GET /unread-count` - Get unread count
 - `GET /:id` - Get notification by ID
@@ -104,6 +112,7 @@ payroll-system/backend/
 ### 🔧 Features Implemented
 
 #### Core Features
+
 - ✅ User authentication & authorization
 - ✅ Employee expense submission
 - ✅ Admin expense approval/rejection
@@ -114,6 +123,7 @@ payroll-system/backend/
 - ✅ Email notifications (configured)
 
 #### Advanced Features
+
 - ✅ Input validation & sanitization
 - ✅ Error handling & logging
 - ✅ Database indexing for performance
@@ -126,11 +136,13 @@ payroll-system/backend/
 ### 🔑 Login Credentials
 
 #### Admin Account
+
 - **Email**: `admin@payrollsystem.com`
 - **Password**: `admin123`
 - **Role**: Administrator
 
 #### Employee Accounts
+
 - **John Doe**: `john.doe@company.com` (password: `password123`) - EMP0001
 - **Jane Smith**: `jane.smith@company.com` (password: `password123`) - EMP0002
 - **Mike Johnson**: `mike.johnson@company.com` (password: `password123`) - EMP0003
@@ -139,6 +151,7 @@ payroll-system/backend/
 ### 🚀 How to Run
 
 1. **Start the server**:
+
    ```bash
    cd /Users/harikrishnankr/Desktop/Project/payroll-system/backend
    npm run dev
@@ -149,6 +162,7 @@ payroll-system/backend/
 3. **Test API health**: `curl http://localhost:5000/api/health`
 
 ### 📝 Sample Data Included
+
 - 1 admin user
 - 4 sample employees with different departments
 - 4 sample expense submissions (approved, pending, rejected)
@@ -156,6 +170,7 @@ payroll-system/backend/
 - 8 notifications (welcome + salary slip notifications)
 
 ### 🔄 Next Steps
+
 The backend is fully functional and ready for frontend integration. You can now:
 
 1. **Create the React frontend** (Phase 3)
@@ -164,6 +179,7 @@ The backend is fully functional and ready for frontend integration. You can now:
 4. **Deploy to production** when ready
 
 ### 🛠️ Technologies Used
+
 - **Node.js** + **Express.js** - Server framework
 - **MongoDB Atlas** - Cloud database
 - **Mongoose** - ODM for MongoDB

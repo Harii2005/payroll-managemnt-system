@@ -1,14 +1,14 @@
 const express = require('express');
 const User = require('../models/User');
-const { 
-  authMiddleware, 
-  adminOnly, 
-  ownerOrAdmin 
+const {
+  authMiddleware,
+  adminOnly,
+  ownerOrAdmin,
 } = require('../middleware/auth');
 const {
   validateUserUpdate,
   validatePagination,
-  validateObjectId
+  validateObjectId,
 } = require('../middleware/validation');
 
 const router = express.Router();
@@ -31,15 +31,15 @@ router.get('/', adminOnly, validatePagination, async (req, res) => {
 
     // Build query
     const query = {};
-    
+
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
-        { employeeId: { $regex: search, $options: 'i' } }
+        { employeeId: { $regex: search, $options: 'i' } },
       ];
     }
-    
+
     if (role) query.role = role;
     if (department) query.department = { $regex: department, $options: 'i' };
     if (isActive !== undefined) query.isActive = isActive === 'true';
@@ -62,15 +62,15 @@ router.get('/', adminOnly, validatePagination, async (req, res) => {
           page,
           limit,
           total,
-          pages: Math.ceil(total / limit)
-        }
-      }
+          pages: Math.ceil(total / limit),
+        },
+      },
     });
   } catch (error) {
     console.error('Get users error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching users'
+      message: 'Error fetching users',
     });
   }
 });
@@ -86,13 +86,13 @@ router.get('/employees', adminOnly, async (req, res) => {
 
     res.json({
       success: true,
-      data: { employees }
+      data: { employees },
     });
   } catch (error) {
     console.error('Get employees error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching employees'
+      message: 'Error fetching employees',
     });
   }
 });
@@ -103,23 +103,23 @@ router.get('/employees', adminOnly, async (req, res) => {
 router.get('/:id', validateObjectId('id'), ownerOrAdmin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
     res.json({
       success: true,
-      data: { user }
+      data: { user },
     });
   } catch (error) {
     console.error('Get user error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching user'
+      message: 'Error fetching user',
     });
   }
 });
@@ -127,67 +127,75 @@ router.get('/:id', validateObjectId('id'), ownerOrAdmin, async (req, res) => {
 // @route   PUT /api/users/:id
 // @desc    Update user
 // @access  Private (own profile or admin)
-router.put('/:id', validateObjectId('id'), validateUserUpdate, ownerOrAdmin, async (req, res) => {
-  try {
-    const { name, email, department, position, salary, bankDetails } = req.body;
-    
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
+router.put(
+  '/:id',
+  validateObjectId('id'),
+  validateUserUpdate,
+  ownerOrAdmin,
+  async (req, res) => {
+    try {
+      const { name, email, department, position, salary, bankDetails } =
+        req.body;
 
-    // Check if email is being changed and if it's unique
-    if (email && email !== user.email) {
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({
           success: false,
-          message: 'Email already exists'
+          message: 'User not found',
         });
       }
-    }
 
-    // Update fields
-    if (name) user.name = name;
-    if (email) user.email = email;
-    if (department) user.department = department;
-    if (position) user.position = position;
-    
-    // Only admin can update salary
-    if (salary && req.user.role === 'admin') {
-      user.salary = {
-        basic: salary.basic || user.salary.basic,
-        allowances: salary.allowances || user.salary.allowances
-      };
-    }
-    
-    // Update bank details
-    if (bankDetails) {
-      user.bankDetails = {
-        accountNumber: bankDetails.accountNumber || user.bankDetails.accountNumber,
-        bankName: bankDetails.bankName || user.bankDetails.bankName,
-        ifscCode: bankDetails.ifscCode || user.bankDetails.ifscCode
-      };
-    }
+      // Check if email is being changed and if it's unique
+      if (email && email !== user.email) {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return res.status(400).json({
+            success: false,
+            message: 'Email already exists',
+          });
+        }
+      }
 
-    await user.save();
+      // Update fields
+      if (name) user.name = name;
+      if (email) user.email = email;
+      if (department) user.department = department;
+      if (position) user.position = position;
 
-    res.json({
-      success: true,
-      message: 'User updated successfully',
-      data: { user }
-    });
-  } catch (error) {
-    console.error('Update user error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error updating user'
-    });
+      // Only admin can update salary
+      if (salary && req.user.role === 'admin') {
+        user.salary = {
+          basic: salary.basic || user.salary.basic,
+          allowances: salary.allowances || user.salary.allowances,
+        };
+      }
+
+      // Update bank details
+      if (bankDetails) {
+        user.bankDetails = {
+          accountNumber:
+            bankDetails.accountNumber || user.bankDetails.accountNumber,
+          bankName: bankDetails.bankName || user.bankDetails.bankName,
+          ifscCode: bankDetails.ifscCode || user.bankDetails.ifscCode,
+        };
+      }
+
+      await user.save();
+
+      res.json({
+        success: true,
+        message: 'User updated successfully',
+        data: { user },
+      });
+    } catch (error) {
+      console.error('Update user error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error updating user',
+      });
+    }
   }
-});
+);
 
 // @route   DELETE /api/users/:id
 // @desc    Delete user (soft delete by deactivating)
@@ -198,7 +206,7 @@ router.delete('/:id', validateObjectId('id'), adminOnly, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -206,7 +214,7 @@ router.delete('/:id', validateObjectId('id'), adminOnly, async (req, res) => {
     if (user._id.toString() === req.user._id.toString()) {
       return res.status(400).json({
         success: false,
-        message: 'You cannot delete your own account'
+        message: 'You cannot delete your own account',
       });
     }
 
@@ -216,13 +224,13 @@ router.delete('/:id', validateObjectId('id'), adminOnly, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'User deactivated successfully'
+      message: 'User deactivated successfully',
     });
   } catch (error) {
     console.error('Delete user error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error deleting user'
+      message: 'Error deleting user',
     });
   }
 });
@@ -230,31 +238,36 @@ router.delete('/:id', validateObjectId('id'), adminOnly, async (req, res) => {
 // @route   PUT /api/users/:id/activate
 // @desc    Activate user
 // @access  Private/Admin
-router.put('/:id/activate', validateObjectId('id'), adminOnly, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({
+router.put(
+  '/:id/activate',
+  validateObjectId('id'),
+  adminOnly,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'User not found',
+        });
+      }
+
+      user.isActive = true;
+      await user.save();
+
+      res.json({
+        success: true,
+        message: 'User activated successfully',
+      });
+    } catch (error) {
+      console.error('Activate user error:', error);
+      res.status(500).json({
         success: false,
-        message: 'User not found'
+        message: 'Error activating user',
       });
     }
-
-    user.isActive = true;
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'User activated successfully'
-    });
-  } catch (error) {
-    console.error('Activate user error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error activating user'
-    });
   }
-});
+);
 
 // @route   GET /api/users/stats/overview
 // @desc    Get user statistics (admin only)
@@ -265,21 +278,21 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
     const activeUsers = await User.countDocuments({ isActive: true });
     const totalEmployees = await User.countDocuments({ role: 'employee' });
     const totalAdmins = await User.countDocuments({ role: 'admin' });
-    
+
     // Get department wise count
     const departmentStats = await User.aggregate([
       { $match: { role: 'employee', isActive: true } },
       { $group: { _id: '$department', count: { $sum: 1 } } },
-      { $sort: { count: -1 } }
+      { $sort: { count: -1 } },
     ]);
 
     // Get recent joinings (last 30 days)
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    
+
     const recentJoinings = await User.countDocuments({
       joiningDate: { $gte: thirtyDaysAgo },
-      role: 'employee'
+      role: 'employee',
     });
 
     res.json({
@@ -291,19 +304,19 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
           inactiveUsers: totalUsers - activeUsers,
           totalEmployees,
           totalAdmins,
-          recentJoinings
+          recentJoinings,
         },
-        departmentStats: departmentStats.map(dept => ({
+        departmentStats: departmentStats.map((dept) => ({
           department: dept._id || 'Not Specified',
-          count: dept.count
-        }))
-      }
+          count: dept.count,
+        })),
+      },
     });
   } catch (error) {
     console.error('Get user stats error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching user statistics'
+      message: 'Error fetching user statistics',
     });
   }
 });
@@ -314,11 +327,11 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
 router.put('/:id/role', validateObjectId('id'), adminOnly, async (req, res) => {
   try {
     const { role } = req.body;
-    
+
     if (!['admin', 'employee'].includes(role)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid role. Must be admin or employee.'
+        message: 'Invalid role. Must be admin or employee.',
       });
     }
 
@@ -326,7 +339,7 @@ router.put('/:id/role', validateObjectId('id'), adminOnly, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
@@ -334,7 +347,7 @@ router.put('/:id/role', validateObjectId('id'), adminOnly, async (req, res) => {
     if (user._id.toString() === req.user._id.toString()) {
       return res.status(400).json({
         success: false,
-        message: 'You cannot change your own role'
+        message: 'You cannot change your own role',
       });
     }
 
@@ -344,13 +357,13 @@ router.put('/:id/role', validateObjectId('id'), adminOnly, async (req, res) => {
     res.json({
       success: true,
       message: `User role updated to ${role} successfully`,
-      data: { user }
+      data: { user },
     });
   } catch (error) {
     console.error('Update user role error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error updating user role'
+      message: 'Error updating user role',
     });
   }
 });

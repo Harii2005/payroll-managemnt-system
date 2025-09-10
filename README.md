@@ -14,6 +14,7 @@ A comprehensive payroll management system built with Node.js, Express, MongoDB, 
 ## Tech Stack
 
 ### Backend
+
 - Node.js + Express
 - MongoDB + Mongoose
 - JWT Authentication
@@ -21,6 +22,7 @@ A comprehensive payroll management system built with Node.js, Express, MongoDB, 
 - Email notifications with Nodemailer
 
 ### Frontend
+
 - React + Vite
 - Tailwind CSS
 - React Router
@@ -52,6 +54,7 @@ payroll-system/
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18+)
 - MongoDB
 - npm or yarn
@@ -59,24 +62,28 @@ payroll-system/
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone <repository-url>
 cd payroll-system
 ```
 
 2. Install backend dependencies
+
 ```bash
 cd backend
 npm install
 ```
 
 3. Install frontend dependencies
+
 ```bash
 cd ../frontend
 npm install
 ```
 
 4. Setup environment variables
+
 ```bash
 # Backend .env
 cp backend/.env.example backend/.env
@@ -85,6 +92,7 @@ cp frontend/.env.example frontend/.env
 ```
 
 5. Start development servers
+
 ```bash
 # Backend (Terminal 1)
 cd backend && npm run dev

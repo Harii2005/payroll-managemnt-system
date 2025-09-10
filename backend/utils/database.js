@@ -9,10 +9,10 @@ const connectDB = async () => {
     });
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-    
+
     // Create default admin user
     await createDefaultAdmin();
-    
+
     return conn;
   } catch (error) {
     console.error('Database connection error:', error);

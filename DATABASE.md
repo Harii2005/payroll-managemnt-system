@@ -3,6 +3,7 @@
 ## Database: `payroll_system`
 
 ### MongoDB Atlas Connection
+
 - **Connection String**: `mongodb+srv://harikrishnankrkv_db_user:***@payroll-system.skmycd0.mongodb.net/`
 - **Database Name**: `payroll_system`
 - **Cluster**: `payroll-system`
@@ -10,9 +11,11 @@
 ## Collections
 
 ### 1. `users`
+
 Stores user accounts for both admins and employees.
 
 **Schema Fields:**
+
 - `_id`: ObjectId (auto-generated)
 - `name`: String (required) - Full name
 - `email`: String (required, unique) - Login email
@@ -33,14 +36,17 @@ Stores user accounts for both admins and employees.
 - `updatedAt`: Date (auto)
 
 **Indexes:**
+
 - `email` (unique)
 - `employeeId` (unique, sparse)
 - `role`
 
 ### 2. `expenses`
+
 Stores employee expense submissions.
 
 **Schema Fields:**
+
 - `_id`: ObjectId (auto-generated)
 - `employeeId`: ObjectId (ref: 'User') - Reference to user
 - `title`: String (required) - Expense title
@@ -62,15 +68,18 @@ Stores employee expense submissions.
 - `updatedAt`: Date (auto)
 
 **Indexes:**
+
 - `employeeId + status`
 - `status + createdAt`
 - `expenseDate`
 - `category`
 
 ### 3. `salaryslips`
+
 Stores salary slip records.
 
 **Schema Fields:**
+
 - `_id`: ObjectId (auto-generated)
 - `employeeId`: ObjectId (ref: 'User') - Reference to employee
 - `month`: Number (1-12) - Salary month
@@ -100,14 +109,17 @@ Stores salary slip records.
 - `updatedAt`: Date (auto)
 
 **Indexes:**
+
 - `employeeId + month + year` (unique compound)
 - `status + createdAt`
 - `year + month`
 
 ### 4. `notifications`
+
 Stores in-app notifications.
 
 **Schema Fields:**
+
 - `_id`: ObjectId (auto-generated)
 - `userId`: ObjectId (ref: 'User') - Target user
 - `title`: String (required) - Notification title
@@ -127,6 +139,7 @@ Stores in-app notifications.
 - `updatedAt`: Date (auto)
 
 **Indexes:**
+
 - `userId + read + createdAt`
 - `type + category`
 - `priority + createdAt`
@@ -135,17 +148,20 @@ Stores in-app notifications.
 ## Initial Data Setup
 
 ### Default Admin User
+
 - **Email**: `admin@payrollsystem.com`
 - **Password**: `admin123`
 - **Role**: `admin`
 - **Name**: `System Administrator`
 
 ### Sample Employee Data
+
 The system will auto-generate employee IDs starting from `EMP0001`.
 
 ## Database Operations
 
 ### Connection
+
 ```javascript
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -154,21 +170,25 @@ mongoose.connect(process.env.MONGODB_URI, {
 ```
 
 ### Auto-Generated Fields
+
 - Employee IDs: `EMP0001`, `EMP0002`, etc.
 - Net salary calculation (automatic)
 - Timestamps (createdAt, updatedAt)
 
 ### File Storage
+
 - Expense receipts: `/uploads/receipts/`
 - Salary slip PDFs: `/uploads/salary-slips/`
 
 ## Security
+
 - Passwords are hashed using bcrypt (salt rounds: 12)
 - JWT tokens for authentication
 - File upload restrictions (5MB max, specific file types)
 - Input validation on all endpoints
 
 ## Environment Variables Required
+
 ```env
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/payroll_system
 DB_NAME=payroll_system

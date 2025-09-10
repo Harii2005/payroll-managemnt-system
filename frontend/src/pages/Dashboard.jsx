@@ -1,20 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../components/Layout';
-import useAuthStore from '../stores/authStore';
-import { usersAPI, expensesAPI, salarySlipsAPI } from '../utils/api';
-import { 
-  DollarSign, 
-  Receipt, 
-  FileText, 
-  Users, 
-  TrendingUp, 
+import React, { useState, useEffect } from "react";
+import Layout from "../components/Layout";
+import useAuthStore from "../stores/authStore";
+import { usersAPI, expensesAPI, salarySlipsAPI } from "../utils/api";
+import {
+  DollarSign,
+  Receipt,
+  FileText,
+  Users,
+  TrendingUp,
   Calendar,
   Clock,
   CheckCircle,
   XCircle,
-  AlertCircle
-} from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+  AlertCircle,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from "recharts";
 
 const Dashboard = () => {
   const { user } = useAuthStore();
@@ -36,8 +46,8 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setIsLoading(true);
-      
-      if (user?.role === 'admin') {
+
+      if (user?.role === "admin") {
         // Admin dashboard data
         const [expensesRes, salarySlipsRes, usersRes] = await Promise.all([
           expensesAPI.getAllExpenses(),
@@ -50,10 +60,14 @@ const Dashboard = () => {
         const users = usersRes.data.users;
 
         setStats({
-          totalSalary: salarySlips.reduce((sum, slip) => sum + slip.netSalary, 0),
+          totalSalary: salarySlips.reduce(
+            (sum, slip) => sum + slip.netSalary,
+            0
+          ),
           totalExpenses: expenses.reduce((sum, exp) => sum + exp.amount, 0),
-          pendingExpenses: expenses.filter(exp => exp.status === 'pending').length,
-          totalEmployees: users.filter(u => u.role === 'employee').length,
+          pendingExpenses: expenses.filter((exp) => exp.status === "pending")
+            .length,
+          totalEmployees: users.filter((u) => u.role === "employee").length,
         });
 
         setRecentExpenses(expenses.slice(0, 5));
@@ -61,8 +75,10 @@ const Dashboard = () => {
 
         // Chart data - expenses by month
         const chartData = expenses.reduce((acc, expense) => {
-          const month = new Date(expense.date).toLocaleDateString('en-US', { month: 'short' });
-          const existing = acc.find(item => item.month === month);
+          const month = new Date(expense.date).toLocaleDateString("en-US", {
+            month: "short",
+          });
+          const existing = acc.find((item) => item.month === month);
           if (existing) {
             existing.amount += expense.amount;
           } else {
@@ -71,7 +87,6 @@ const Dashboard = () => {
           return acc;
         }, []);
         setExpenseChart(chartData);
-
       } else {
         // Employee dashboard data
         const [expensesRes, salarySlipsRes] = await Promise.all([
@@ -83,9 +98,13 @@ const Dashboard = () => {
         const salarySlips = salarySlipsRes.data.salarySlips;
 
         setStats({
-          totalSalary: salarySlips.reduce((sum, slip) => sum + slip.netSalary, 0),
+          totalSalary: salarySlips.reduce(
+            (sum, slip) => sum + slip.netSalary,
+            0
+          ),
           totalExpenses: expenses.reduce((sum, exp) => sum + exp.amount, 0),
-          pendingExpenses: expenses.filter(exp => exp.status === 'pending').length,
+          pendingExpenses: expenses.filter((exp) => exp.status === "pending")
+            .length,
           totalEmployees: 0,
         });
 
@@ -94,8 +113,10 @@ const Dashboard = () => {
 
         // Chart data - my expenses by month
         const chartData = expenses.reduce((acc, expense) => {
-          const month = new Date(expense.date).toLocaleDateString('en-US', { month: 'short' });
-          const existing = acc.find(item => item.month === month);
+          const month = new Date(expense.date).toLocaleDateString("en-US", {
+            month: "short",
+          });
+          const existing = acc.find((item) => item.month === month);
           if (existing) {
             existing.amount += expense.amount;
           } else {
@@ -106,13 +127,19 @@ const Dashboard = () => {
         setExpenseChart(chartData);
       }
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      console.error("Error fetching dashboard data:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const StatCard = ({ title, value, icon: Icon, color = 'primary', format = 'number' }) => (
+  const StatCard = ({
+    title,
+    value,
+    icon: Icon,
+    color = "primary",
+    format = "number",
+  }) => (
     <div className="card">
       <div className="flex items-center">
         <div className={`p-2 rounded-lg bg-${color}-100`}>
@@ -121,7 +148,9 @@ const Dashboard = () => {
         <div className="ml-4">
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className="text-2xl font-bold text-gray-900">
-            {format === 'currency' ? `$${value.toLocaleString()}` : value.toLocaleString()}
+            {format === "currency"
+              ? `$${value.toLocaleString()}`
+              : value.toLocaleString()}
           </p>
         </div>
       </div>
@@ -130,9 +159,9 @@ const Dashboard = () => {
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'rejected':
+      case "rejected":
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
@@ -141,13 +170,15 @@ const Dashboard = () => {
 
   const getStatusBadge = (status) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      approved: 'bg-green-100 text-green-800',
-      rejected: 'bg-red-100 text-red-800',
+      pending: "bg-yellow-100 text-yellow-800",
+      approved: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800",
     };
-    
+
     return (
-      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}>
+      <span
+        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}
+      >
         {getStatusIcon(status)}
         <span className="ml-1 capitalize">{status}</span>
       </span>
@@ -171,7 +202,7 @@ const Dashboard = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600">
-            {user?.role === 'admin' ? 'Admin Overview' : 'Your Overview'}
+            {user?.role === "admin" ? "Admin Overview" : "Your Overview"}
           </p>
         </div>
 
@@ -197,7 +228,7 @@ const Dashboard = () => {
             icon={AlertCircle}
             color="yellow"
           />
-          {user?.role === 'admin' && (
+          {user?.role === "admin" && (
             <StatCard
               title="Total Employees"
               value={stats.totalEmployees}
@@ -219,7 +250,7 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+                <Tooltip formatter={(value) => [`$${value}`, "Amount"]} />
                 <Bar dataKey="amount" fill="#3b82f6" />
               </BarChart>
             </ResponsiveContainer>
@@ -232,18 +263,25 @@ const Dashboard = () => {
             </h3>
             <div className="space-y-4">
               {recentExpenses.slice(0, 3).map((expense) => (
-                <div key={expense._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div
+                  key={expense._id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
                   <div className="flex items-center space-x-3">
                     <Receipt className="h-4 w-4 text-gray-400" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{expense.description}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {expense.description}
+                      </p>
                       <p className="text-xs text-gray-500">
                         {new Date(expense.date).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">${expense.amount}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      ${expense.amount}
+                    </p>
                     {getStatusBadge(expense.status)}
                   </div>
                 </div>

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 const useAuthStore = create(
   persist(
@@ -8,20 +8,20 @@ const useAuthStore = create(
       token: null,
       isAuthenticated: false,
       isLoading: false,
-      
+
       login: async (email, password) => {
         set({ isLoading: true });
         try {
-          const response = await fetch('http://localhost:5001/api/auth/login', {
-            method: 'POST',
+          const response = await fetch("http://localhost:5001/api/auth/login", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({ email, password }),
           });
-          
+
           const data = await response.json();
-          
+
           if (response.ok) {
             set({
               user: data.user,
@@ -36,23 +36,26 @@ const useAuthStore = create(
           }
         } catch (error) {
           set({ isLoading: false });
-          return { success: false, error: 'Network error' };
+          return { success: false, error: "Network error" };
         }
       },
-      
+
       register: async (userData) => {
         set({ isLoading: true });
         try {
-          const response = await fetch('http://localhost:5001/api/auth/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-          });
-          
+          const response = await fetch(
+            "http://localhost:5001/api/auth/register",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            }
+          );
+
           const data = await response.json();
-          
+
           if (response.ok) {
             set({
               user: data.user,
@@ -67,10 +70,10 @@ const useAuthStore = create(
           }
         } catch (error) {
           set({ isLoading: false });
-          return { success: false, error: 'Network error' };
+          return { success: false, error: "Network error" };
         }
       },
-      
+
       logout: () => {
         set({
           user: null,
@@ -78,14 +81,14 @@ const useAuthStore = create(
           isAuthenticated: false,
         });
       },
-      
+
       checkAuth: () => {
         const state = get();
         return state.isAuthenticated && state.token;
       },
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       partialize: (state) => ({
         user: state.user,
         token: state.token,

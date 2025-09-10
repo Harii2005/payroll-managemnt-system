@@ -1,12 +1,9 @@
 const express = require('express');
 const Notification = require('../models/Notification');
-const { 
-  authMiddleware, 
-  adminOnly 
-} = require('../middleware/auth');
+const { authMiddleware, adminOnly } = require('../middleware/auth');
 const {
   validatePagination,
-  validateObjectId
+  validateObjectId,
 } = require('../middleware/validation');
 
 const router = express.Router();
@@ -28,7 +25,7 @@ router.get('/', validatePagination, async (req, res) => {
 
     // Build query
     const query = { userId: req.user._id };
-    
+
     if (read !== undefined) query.read = read === 'true';
     if (type) query.type = type;
     if (category) query.category = category;
@@ -46,7 +43,7 @@ router.get('/', validatePagination, async (req, res) => {
     // Get unread count
     const unreadCount = await Notification.countDocuments({
       userId: req.user._id,
-      read: false
+      read: false,
     });
 
     res.json({
@@ -58,15 +55,15 @@ router.get('/', validatePagination, async (req, res) => {
           page,
           limit,
           total,
-          pages: Math.ceil(total / limit)
-        }
-      }
+          pages: Math.ceil(total / limit),
+        },
+      },
     });
   } catch (error) {
     console.error('Get notifications error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching notifications'
+      message: 'Error fetching notifications',
     });
   }
 });
@@ -78,18 +75,18 @@ router.get('/unread-count', async (req, res) => {
   try {
     const unreadCount = await Notification.countDocuments({
       userId: req.user._id,
-      read: false
+      read: false,
     });
 
     res.json({
       success: true,
-      data: { unreadCount }
+      data: { unreadCount },
     });
   } catch (error) {
     console.error('Get unread count error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching unread count'
+      message: 'Error fetching unread count',
     });
   }
 });
@@ -99,13 +96,15 @@ router.get('/unread-count', async (req, res) => {
 // @access  Private
 router.get('/:id', validateObjectId('id'), async (req, res) => {
   try {
-    const notification = await Notification.findById(req.params.id)
-      .populate('userId', 'name email');
+    const notification = await Notification.findById(req.params.id).populate(
+      'userId',
+      'name email'
+    );
 
     if (!notification) {
       return res.status(404).json({
         success: false,
-        message: 'Notification not found'
+        message: 'Notification not found',
       });
     }
 
@@ -113,7 +112,7 @@ router.get('/:id', validateObjectId('id'), async (req, res) => {
     if (notification.userId._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -124,13 +123,13 @@ router.get('/:id', validateObjectId('id'), async (req, res) => {
 
     res.json({
       success: true,
-      data: { notification }
+      data: { notification },
     });
   } catch (error) {
     console.error('Get notification error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching notification'
+      message: 'Error fetching notification',
     });
   }
 });
@@ -145,7 +144,7 @@ router.put('/:id/read', validateObjectId('id'), async (req, res) => {
     if (!notification) {
       return res.status(404).json({
         success: false,
-        message: 'Notification not found'
+        message: 'Notification not found',
       });
     }
 
@@ -153,7 +152,7 @@ router.put('/:id/read', validateObjectId('id'), async (req, res) => {
     if (notification.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -164,13 +163,13 @@ router.put('/:id/read', validateObjectId('id'), async (req, res) => {
     res.json({
       success: true,
       message: 'Notification marked as read',
-      data: { notification }
+      data: { notification },
     });
   } catch (error) {
     console.error('Mark notification as read error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error marking notification as read'
+      message: 'Error marking notification as read',
     });
   }
 });
@@ -185,7 +184,7 @@ router.put('/:id/unread', validateObjectId('id'), async (req, res) => {
     if (!notification) {
       return res.status(404).json({
         success: false,
-        message: 'Notification not found'
+        message: 'Notification not found',
       });
     }
 
@@ -193,7 +192,7 @@ router.put('/:id/unread', validateObjectId('id'), async (req, res) => {
     if (notification.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -204,13 +203,13 @@ router.put('/:id/unread', validateObjectId('id'), async (req, res) => {
     res.json({
       success: true,
       message: 'Notification marked as unread',
-      data: { notification }
+      data: { notification },
     });
   } catch (error) {
     console.error('Mark notification as unread error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error marking notification as unread'
+      message: 'Error marking notification as unread',
     });
   }
 });
@@ -224,13 +223,13 @@ router.put('/mark-all-read', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'All notifications marked as read'
+      message: 'All notifications marked as read',
     });
   } catch (error) {
     console.error('Mark all notifications as read error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error marking all notifications as read'
+      message: 'Error marking all notifications as read',
     });
   }
 });
@@ -245,7 +244,7 @@ router.delete('/:id', validateObjectId('id'), async (req, res) => {
     if (!notification) {
       return res.status(404).json({
         success: false,
-        message: 'Notification not found'
+        message: 'Notification not found',
       });
     }
 
@@ -253,7 +252,7 @@ router.delete('/:id', validateObjectId('id'), async (req, res) => {
     if (notification.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied'
+        message: 'Access denied',
       });
     }
 
@@ -261,13 +260,13 @@ router.delete('/:id', validateObjectId('id'), async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Notification deleted successfully'
+      message: 'Notification deleted successfully',
     });
   } catch (error) {
     console.error('Delete notification error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error deleting notification'
+      message: 'Error deleting notification',
     });
   }
 });
@@ -279,18 +278,18 @@ router.delete('/clear-read', async (req, res) => {
   try {
     const result = await Notification.deleteMany({
       userId: req.user._id,
-      read: true
+      read: true,
     });
 
     res.json({
       success: true,
-      message: `${result.deletedCount} read notifications cleared`
+      message: `${result.deletedCount} read notifications cleared`,
     });
   } catch (error) {
     console.error('Clear read notifications error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error clearing read notifications'
+      message: 'Error clearing read notifications',
     });
   }
 });
@@ -309,14 +308,14 @@ router.post('/create', adminOnly, async (req, res) => {
       priority,
       actionUrl,
       actionText,
-      expiresAt
+      expiresAt,
     } = req.body;
 
     // Validate required fields
     if (!userId || !title || !message) {
       return res.status(400).json({
         success: false,
-        message: 'User ID, title, and message are required'
+        message: 'User ID, title, and message are required',
       });
     }
 
@@ -329,7 +328,7 @@ router.post('/create', adminOnly, async (req, res) => {
       priority: priority || 'medium',
       actionUrl,
       actionText,
-      expiresAt: expiresAt ? new Date(expiresAt) : undefined
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
     });
 
     await notification.populate('userId', 'name email');
@@ -337,13 +336,13 @@ router.post('/create', adminOnly, async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Notification created successfully',
-      data: { notification }
+      data: { notification },
     });
   } catch (error) {
     console.error('Create notification error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error creating notification'
+      message: 'Error creating notification',
     });
   }
 });
@@ -362,14 +361,14 @@ router.post('/broadcast', adminOnly, async (req, res) => {
       actionUrl,
       actionText,
       expiresAt,
-      targetRole
+      targetRole,
     } = req.body;
 
     // Validate required fields
     if (!title || !message) {
       return res.status(400).json({
         success: false,
-        message: 'Title and message are required'
+        message: 'Title and message are required',
       });
     }
 
@@ -381,9 +380,9 @@ router.post('/broadcast', adminOnly, async (req, res) => {
     }
 
     const users = await User.find(query).select('_id');
-    
+
     // Create notifications for all users
-    const notifications = users.map(user => ({
+    const notifications = users.map((user) => ({
       userId: user._id,
       title,
       message,
@@ -392,7 +391,7 @@ router.post('/broadcast', adminOnly, async (req, res) => {
       priority: priority || 'medium',
       actionUrl,
       actionText,
-      expiresAt: expiresAt ? new Date(expiresAt) : undefined
+      expiresAt: expiresAt ? new Date(expiresAt) : undefined,
     }));
 
     await Notification.insertMany(notifications);
@@ -402,14 +401,14 @@ router.post('/broadcast', adminOnly, async (req, res) => {
       message: `Notification broadcasted to ${notifications.length} users`,
       data: {
         usersNotified: notifications.length,
-        targetRole: targetRole || 'all'
-      }
+        targetRole: targetRole || 'all',
+      },
     });
   } catch (error) {
     console.error('Broadcast notification error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error broadcasting notification'
+      message: 'Error broadcasting notification',
     });
   }
 });
@@ -420,7 +419,9 @@ router.post('/broadcast', adminOnly, async (req, res) => {
 router.get('/stats/overview', adminOnly, async (req, res) => {
   try {
     const totalNotifications = await Notification.countDocuments();
-    const unreadNotifications = await Notification.countDocuments({ read: false });
+    const unreadNotifications = await Notification.countDocuments({
+      read: false,
+    });
     const readNotifications = await Notification.countDocuments({ read: true });
 
     // Get notifications by type
@@ -428,10 +429,10 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
       {
         $group: {
           _id: '$type',
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
-      { $sort: { count: -1 } }
+      { $sort: { count: -1 } },
     ]);
 
     // Get notifications by category
@@ -439,10 +440,10 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
       {
         $group: {
           _id: '$category',
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
-      { $sort: { count: -1 } }
+      { $sort: { count: -1 } },
     ]);
 
     // Get notifications by priority
@@ -450,10 +451,10 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
       {
         $group: {
           _id: '$priority',
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
-      { $sort: { count: -1 } }
+      { $sort: { count: -1 } },
     ]);
 
     // Get daily notification count for last 7 days
@@ -463,18 +464,18 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
     const dailyStats = await Notification.aggregate([
       {
         $match: {
-          createdAt: { $gte: sevenDaysAgo }
-        }
+          createdAt: { $gte: sevenDaysAgo },
+        },
       },
       {
         $group: {
           _id: {
-            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' }
+            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
           },
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
-      { $sort: { '_id': 1 } }
+      { $sort: { _id: 1 } },
     ]);
 
     res.json({
@@ -484,19 +485,22 @@ router.get('/stats/overview', adminOnly, async (req, res) => {
           totalNotifications,
           unreadNotifications,
           readNotifications,
-          readPercentage: totalNotifications > 0 ? Math.round((readNotifications / totalNotifications) * 100) : 0
+          readPercentage:
+            totalNotifications > 0
+              ? Math.round((readNotifications / totalNotifications) * 100)
+              : 0,
         },
         typeStats,
         categoryStats,
         priorityStats,
-        dailyStats
-      }
+        dailyStats,
+      },
     });
   } catch (error) {
     console.error('Get notification stats error:', error);
     res.status(500).json({
       success: false,
-      message: 'Error fetching notification statistics'
+      message: 'Error fetching notification statistics',
     });
   }
 });

@@ -9,7 +9,7 @@ async function testRegistration() {
       department: 'IT',
       position: 'Developer',
       employeeId: 'EMP001',
-      role: 'employee'
+      role: 'employee',
     };
 
     console.log('Testing registration endpoint...');
@@ -34,7 +34,6 @@ async function testRegistration() {
     } else {
       console.log('❌ Registration failed');
     }
-
   } catch (error) {
     console.error('Error testing registration:', error.message);
   }

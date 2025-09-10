@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../components/Layout';
-import useAuthStore from '../stores/authStore';
-import { expensesAPI } from '../utils/api';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Download, 
+import React, { useState, useEffect } from "react";
+import Layout from "../components/Layout";
+import useAuthStore from "../stores/authStore";
+import { expensesAPI } from "../utils/api";
+import {
+  Plus,
+  Search,
+  Filter,
+  Download,
   Upload,
   CheckCircle,
   XCircle,
   Clock,
   Edit,
-  Trash2
-} from 'lucide-react';
+  Trash2,
+} from "lucide-react";
 
 const Expenses = () => {
   const { user } = useAuthStore();
   const [expenses, setExpenses] = useState([]);
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showModal, setShowModal] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [formData, setFormData] = useState({
-    description: '',
-    amount: '',
-    category: '',
-    date: new Date().toISOString().split('T')[0],
+    description: "",
+    amount: "",
+    category: "",
+    date: new Date().toISOString().split("T")[0],
   });
 
   useEffect(() => {
@@ -42,13 +42,14 @@ const Expenses = () => {
   const fetchExpenses = async () => {
     try {
       setIsLoading(true);
-      const response = user?.role === 'admin' 
-        ? await expensesAPI.getAllExpenses()
-        : await expensesAPI.getMyExpenses();
-      
+      const response =
+        user?.role === "admin"
+          ? await expensesAPI.getAllExpenses()
+          : await expensesAPI.getMyExpenses();
+
       setExpenses(response.data.expenses);
     } catch (error) {
-      console.error('Error fetching expenses:', error);
+      console.error("Error fetching expenses:", error);
     } finally {
       setIsLoading(false);
     }
@@ -58,14 +59,17 @@ const Expenses = () => {
     let filtered = expenses;
 
     if (searchTerm) {
-      filtered = filtered.filter(expense =>
-        expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        expense.category.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (expense) =>
+          expense.description
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          expense.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(expense => expense.status === statusFilter);
+    if (statusFilter !== "all") {
+      filtered = filtered.filter((expense) => expense.status === statusFilter);
     }
 
     setFilteredExpenses(filtered);
@@ -76,23 +80,26 @@ const Expenses = () => {
     try {
       if (selectedExpense) {
         // Update existing expense (admin only)
-        await expensesAPI.updateExpenseStatus(selectedExpense._id, formData.status);
+        await expensesAPI.updateExpenseStatus(
+          selectedExpense._id,
+          formData.status
+        );
       } else {
         // Create new expense
         await expensesAPI.createExpense(formData);
       }
-      
+
       setShowModal(false);
       setSelectedExpense(null);
       setFormData({
-        description: '',
-        amount: '',
-        category: '',
-        date: new Date().toISOString().split('T')[0],
+        description: "",
+        amount: "",
+        category: "",
+        date: new Date().toISOString().split("T")[0],
       });
       fetchExpenses();
     } catch (error) {
-      console.error('Error saving expense:', error);
+      console.error("Error saving expense:", error);
     }
   };
 
@@ -101,26 +108,26 @@ const Expenses = () => {
       await expensesAPI.updateExpenseStatus(expenseId, status);
       fetchExpenses();
     } catch (error) {
-      console.error('Error updating expense status:', error);
+      console.error("Error updating expense status:", error);
     }
   };
 
   const handleDelete = async (expenseId) => {
-    if (window.confirm('Are you sure you want to delete this expense?')) {
+    if (window.confirm("Are you sure you want to delete this expense?")) {
       try {
         await expensesAPI.deleteExpense(expenseId);
         fetchExpenses();
       } catch (error) {
-        console.error('Error deleting expense:', error);
+        console.error("Error deleting expense:", error);
       }
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'rejected':
+      case "rejected":
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return <Clock className="h-4 w-4 text-yellow-500" />;
@@ -129,13 +136,15 @@ const Expenses = () => {
 
   const getStatusBadge = (status) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      approved: 'bg-green-100 text-green-800',
-      rejected: 'bg-red-100 text-red-800',
+      pending: "bg-yellow-100 text-yellow-800",
+      approved: "bg-green-100 text-green-800",
+      rejected: "bg-red-100 text-red-800",
     };
-    
+
     return (
-      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}>
+      <span
+        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${colors[status]}`}
+      >
         {getStatusIcon(status)}
         <span className="ml-1 capitalize">{status}</span>
       </span>
@@ -159,17 +168,16 @@ const Expenses = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {user?.role === 'admin' ? 'All Expenses' : 'My Expenses'}
+              {user?.role === "admin" ? "All Expenses" : "My Expenses"}
             </h1>
             <p className="text-gray-600">
-              {user?.role === 'admin' 
-                ? 'Manage and approve employee expenses' 
-                : 'Track and submit your expenses'
-              }
+              {user?.role === "admin"
+                ? "Manage and approve employee expenses"
+                : "Track and submit your expenses"}
             </p>
           </div>
-          
-          {user?.role === 'employee' && (
+
+          {user?.role === "employee" && (
             <button
               onClick={() => setShowModal(true)}
               className="btn-primary flex items-center"
@@ -195,7 +203,7 @@ const Expenses = () => {
                 />
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-gray-400" />
               <select
@@ -230,7 +238,7 @@ const Expenses = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
-                  {user?.role === 'admin' && (
+                  {user?.role === "admin" && (
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Employee
                     </th>
@@ -260,9 +268,9 @@ const Expenses = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(expense.date).toLocaleDateString()}
                     </td>
-                    {user?.role === 'admin' && (
+                    {user?.role === "admin" && (
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {expense.employeeId?.name || 'N/A'}
+                        {expense.employeeId?.name || "N/A"}
                       </td>
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -270,34 +278,40 @@ const Expenses = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
-                        {user?.role === 'admin' && expense.status === 'pending' && (
-                          <>
+                        {user?.role === "admin" &&
+                          expense.status === "pending" && (
+                            <>
+                              <button
+                                onClick={() =>
+                                  handleStatusUpdate(expense._id, "approved")
+                                }
+                                className="text-green-600 hover:text-green-900"
+                                title="Approve"
+                              >
+                                <CheckCircle className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleStatusUpdate(expense._id, "rejected")
+                                }
+                                className="text-red-600 hover:text-red-900"
+                                title="Reject"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
+
+                        {user?.role === "employee" &&
+                          expense.status === "pending" && (
                             <button
-                              onClick={() => handleStatusUpdate(expense._id, 'approved')}
-                              className="text-green-600 hover:text-green-900"
-                              title="Approve"
-                            >
-                              <CheckCircle className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleStatusUpdate(expense._id, 'rejected')}
+                              onClick={() => handleDelete(expense._id)}
                               className="text-red-600 hover:text-red-900"
-                              title="Reject"
+                              title="Delete"
                             >
-                              <XCircle className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                             </button>
-                          </>
-                        )}
-                        
-                        {(user?.role === 'employee' && expense.status === 'pending') && (
-                          <button
-                            onClick={() => handleDelete(expense._id)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        )}
+                          )}
                       </div>
                     </td>
                   </tr>
@@ -305,7 +319,7 @@ const Expenses = () => {
               </tbody>
             </table>
           </div>
-          
+
           {filteredExpenses.length === 0 && (
             <div className="text-center py-8">
               <p className="text-gray-500">No expenses found.</p>
@@ -321,7 +335,7 @@ const Expenses = () => {
                 <h3 className="text-lg font-medium text-gray-900 mb-4">
                   Add New Expense
                 </h3>
-                
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -331,12 +345,17 @@ const Expenses = () => {
                       type="text"
                       required
                       value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
                       className="input-field"
                       placeholder="Enter expense description"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Category
@@ -344,7 +363,9 @@ const Expenses = () => {
                     <select
                       required
                       value={formData.category}
-                      onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
                       className="input-field"
                     >
                       <option value="">Select category</option>
@@ -356,7 +377,7 @@ const Expenses = () => {
                       <option value="Other">Other</option>
                     </select>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Amount
@@ -366,12 +387,14 @@ const Expenses = () => {
                       step="0.01"
                       required
                       value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, amount: e.target.value })
+                      }
                       className="input-field"
                       placeholder="Enter amount"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700">
                       Date
@@ -380,11 +403,13 @@ const Expenses = () => {
                       type="date"
                       required
                       value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                      onChange={(e) =>
+                        setFormData({ ...formData, date: e.target.value })
+                      }
                       className="input-field"
                     />
                   </div>
-                  
+
                   <div className="flex justify-end space-x-3 pt-4">
                     <button
                       type="button"
@@ -393,10 +418,7 @@ const Expenses = () => {
                     >
                       Cancel
                     </button>
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                    >
+                    <button type="submit" className="btn-primary">
                       Add Expense
                     </button>
                   </div>

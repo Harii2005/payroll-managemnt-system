@@ -35,7 +35,7 @@ const seedDatabase = async () => {
       role: 'admin',
       department: 'IT',
       position: 'System Administrator',
-      isActive: true
+      isActive: true,
     });
     await admin.save();
     console.log('✓ Admin user created');
@@ -52,13 +52,13 @@ const seedDatabase = async () => {
         position: 'Software Developer',
         salary: {
           basic: 50000,
-          allowances: 10000
+          allowances: 10000,
         },
         bankDetails: {
           accountNumber: '1234567890',
           bankName: 'State Bank of India',
-          ifscCode: 'SBIN0001234'
-        }
+          ifscCode: 'SBIN0001234',
+        },
       },
       {
         name: 'Jane Smith',
@@ -69,13 +69,13 @@ const seedDatabase = async () => {
         position: 'Marketing Manager',
         salary: {
           basic: 45000,
-          allowances: 8000
+          allowances: 8000,
         },
         bankDetails: {
           accountNumber: '0987654321',
           bankName: 'HDFC Bank',
-          ifscCode: 'HDFC0001234'
-        }
+          ifscCode: 'HDFC0001234',
+        },
       },
       {
         name: 'Mike Johnson',
@@ -86,13 +86,13 @@ const seedDatabase = async () => {
         position: 'Sales Executive',
         salary: {
           basic: 40000,
-          allowances: 7000
+          allowances: 7000,
         },
         bankDetails: {
           accountNumber: '1122334455',
           bankName: 'ICICI Bank',
-          ifscCode: 'ICIC0001234'
-        }
+          ifscCode: 'ICIC0001234',
+        },
       },
       {
         name: 'Sarah Wilson',
@@ -103,14 +103,14 @@ const seedDatabase = async () => {
         position: 'HR Specialist',
         salary: {
           basic: 42000,
-          allowances: 6000
+          allowances: 6000,
         },
         bankDetails: {
           accountNumber: '5566778899',
           bankName: 'Axis Bank',
-          ifscCode: 'UTIB0001234'
-        }
-      }
+          ifscCode: 'UTIB0001234',
+        },
+      },
     ];
 
     const createdEmployees = [];
@@ -118,7 +118,9 @@ const seedDatabase = async () => {
       const employee = new User(empData);
       await employee.save();
       createdEmployees.push(employee);
-      console.log(`✓ Employee created: ${employee.name} (${employee.employeeId})`);
+      console.log(
+        `✓ Employee created: ${employee.name} (${employee.employeeId})`
+      );
     }
 
     // Create Sample Expenses
@@ -127,13 +129,14 @@ const seedDatabase = async () => {
       {
         employeeId: createdEmployees[0]._id,
         title: 'Business Travel to Mumbai',
-        description: 'Flight tickets and hotel accommodation for client meeting',
+        description:
+          'Flight tickets and hotel accommodation for client meeting',
         amount: 15000,
         category: 'travel',
         expenseDate: new Date(2024, 8, 15), // September 15, 2024
         status: 'approved',
         approvedBy: admin._id,
-        approvedAt: new Date()
+        approvedAt: new Date(),
       },
       {
         employeeId: createdEmployees[1]._id,
@@ -142,7 +145,7 @@ const seedDatabase = async () => {
         amount: 5000,
         category: 'training',
         expenseDate: new Date(2024, 8, 20),
-        status: 'pending'
+        status: 'pending',
       },
       {
         employeeId: createdEmployees[0]._id,
@@ -154,7 +157,7 @@ const seedDatabase = async () => {
         status: 'rejected',
         approvedBy: admin._id,
         approvedAt: new Date(),
-        rejectionReason: 'Exceeds meal allowance limit'
+        rejectionReason: 'Exceeds meal allowance limit',
       },
       {
         employeeId: createdEmployees[2]._id,
@@ -165,8 +168,8 @@ const seedDatabase = async () => {
         expenseDate: new Date(2024, 8, 25),
         status: 'approved',
         approvedBy: admin._id,
-        approvedAt: new Date()
-      }
+        approvedAt: new Date(),
+      },
     ];
 
     for (const expenseData of sampleExpenses) {
@@ -192,19 +195,19 @@ const seedDatabase = async () => {
           hra: Math.round(employee.salary.basic * 0.4), // 40% of basic
           transport: 2000,
           medical: 1500,
-          special: employee.salary.allowances
+          special: employee.salary.allowances,
         },
         deductions: {
           tax: Math.round(employee.salary.basic * 0.1), // 10% tax
           pf: Math.round(employee.salary.basic * 0.12), // 12% PF
-          insurance: 1000
+          insurance: 1000,
         },
         workingDays: {
           total: 22,
-          worked: 22
+          worked: 22,
         },
         generatedBy: admin._id,
-        status: 'finalized'
+        status: 'finalized',
       });
 
       await salarySlip.save();
@@ -218,10 +221,11 @@ const seedDatabase = async () => {
       await Notification.create({
         userId: employee._id,
         title: 'Welcome to Payroll System',
-        message: 'Welcome to the company payroll management system. You can now submit expenses and view your salary slips.',
+        message:
+          'Welcome to the company payroll management system. You can now submit expenses and view your salary slips.',
         type: 'info',
         category: 'system_update',
-        priority: 'medium'
+        priority: 'medium',
       });
 
       // Salary slip notification
@@ -233,7 +237,7 @@ const seedDatabase = async () => {
         category: 'salary_generated',
         priority: 'high',
         actionUrl: '/salary-slips',
-        actionText: 'View Salary Slip'
+        actionText: 'View Salary Slip',
       });
     }
 
@@ -241,17 +245,18 @@ const seedDatabase = async () => {
 
     console.log('\n🎉 Database seeded successfully!');
     console.log('\n📊 Summary:');
-    console.log(`- Admin user: ${admin.email} (password: ${process.env.ADMIN_PASSWORD || 'admin123'})`);
+    console.log(
+      `- Admin user: ${admin.email} (password: ${process.env.ADMIN_PASSWORD || 'admin123'})`
+    );
     console.log(`- Employees created: ${createdEmployees.length}`);
     console.log(`- Sample expenses: ${sampleExpenses.length}`);
     console.log(`- Salary slips: ${createdEmployees.length}`);
     console.log(`- Notifications: ${createdEmployees.length * 2}`);
 
     console.log('\n👤 Employee Login Credentials:');
-    createdEmployees.forEach(emp => {
+    createdEmployees.forEach((emp) => {
       console.log(`- ${emp.email} (password: password123) - ${emp.employeeId}`);
     });
-
   } catch (error) {
     console.error('Error seeding database:', error);
   } finally {
@@ -263,8 +268,18 @@ const seedDatabase = async () => {
 // Helper function to get month name
 const getMonthName = (month) => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   return months[month - 1] || '';
 };

@@ -1,41 +1,41 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import useAuthStore from '../stores/authStore';
-import { Eye, EyeOff, UserPlus } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../stores/authStore";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    department: '',
-    position: '',
-    employeeId: '',
-    role: 'employee'
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    department: "",
+    position: "",
+    employeeId: "",
+    role: "employee",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const { register, isLoading } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-    
+    setError("");
+    setSuccess("");
+
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     // Validate password strength
     if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
+      setError("Password must be at least 8 characters long");
       return;
     }
 
@@ -46,18 +46,18 @@ const Register = () => {
       department: formData.department,
       position: formData.position,
       employeeId: formData.employeeId,
-      role: formData.role
+      role: formData.role,
     };
-    
+
     const result = await register(registrationData);
-    
+
     if (result.success) {
-      setSuccess('Registration successful! You can now login.');
+      setSuccess("Registration successful! You can now login.");
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } else {
-      setError(result.error || 'Registration failed. Please try again.');
+      setError(result.error || "Registration failed. Please try again.");
     }
   };
 
@@ -75,8 +75,11 @@ const Register = () => {
           Create your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
             Sign in here
           </Link>
         </p>
@@ -98,7 +101,10 @@ const Register = () => {
             )}
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Full Name
               </label>
               <div className="mt-1">
@@ -116,7 +122,10 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <div className="mt-1">
@@ -135,7 +144,10 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="employeeId" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="employeeId"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Employee ID
               </label>
               <div className="mt-1">
@@ -153,7 +165,10 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="department"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Department
               </label>
               <div className="mt-1">
@@ -177,7 +192,10 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="position" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="position"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Position
               </label>
               <div className="mt-1">
@@ -195,14 +213,17 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1 relative">
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={handleChange}
@@ -227,14 +248,17 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirm Password
               </label>
               <div className="mt-1 relative">
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -264,7 +288,7 @@ const Register = () => {
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <UserPlus className="h-5 w-5 text-blue-500 group-hover:text-blue-400" />
                 </span>
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+                {isLoading ? "Creating Account..." : "Create Account"}
               </button>
             </div>
           </form>

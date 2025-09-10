@@ -1,301 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payroll System Test</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .test-section {
-            margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .success { background-color: #d4edda; }
-        .error { background-color: #f8d7da; }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover { background-color: #0056b3; }
-        input {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .result {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+      }
+      .error {
+        background-color: #f8d7da;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      input {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .result {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: #f8f9fa;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🎉 Payroll System - API Test Suite</h1>
-    
+
     <!-- Health Check -->
     <div class="test-section">
-        <h3>1. Backend Health Check</h3>
-        <button onclick="testHealth()">Test Health Endpoint</button>
-        <div id="health-result" class="result"></div>
+      <h3>1. Backend Health Check</h3>
+      <button onclick="testHealth()">Test Health Endpoint</button>
+      <div id="health-result" class="result"></div>
     </div>
 
     <!-- Authentication Test -->
     <div class="test-section">
-        <h3>2. Authentication Test</h3>
-        <div>
-            <h4>Admin Login</h4>
-            <input type="email" id="admin-email" placeholder="Email" value="admin@payrollsystem.com">
-            <input type="password" id="admin-password" placeholder="Password" value="admin123">
-            <button onclick="testLogin('admin')">Test Admin Login</button>
-        </div>
-        <div>
-            <h4>Employee Login</h4>
-            <input type="email" id="employee-email" placeholder="Email" value="john.doe@example.com">
-            <input type="password" id="employee-password" placeholder="Password" value="password123">
-            <button onclick="testLogin('employee')">Test Employee Login</button>
-        </div>
-        <div id="auth-result" class="result"></div>
+      <h3>2. Authentication Test</h3>
+      <div>
+        <h4>Admin Login</h4>
+        <input
+          type="email"
+          id="admin-email"
+          placeholder="Email"
+          value="admin@payrollsystem.com"
+        />
+        <input
+          type="password"
+          id="admin-password"
+          placeholder="Password"
+          value="admin123"
+        />
+        <button onclick="testLogin('admin')">Test Admin Login</button>
+      </div>
+      <div>
+        <h4>Employee Login</h4>
+        <input
+          type="email"
+          id="employee-email"
+          placeholder="Email"
+          value="john.doe@example.com"
+        />
+        <input
+          type="password"
+          id="employee-password"
+          placeholder="Password"
+          value="password123"
+        />
+        <button onclick="testLogin('employee')">Test Employee Login</button>
+      </div>
+      <div id="auth-result" class="result"></div>
     </div>
 
     <!-- API Endpoints Test -->
     <div class="test-section">
-        <h3>3. API Endpoints Test</h3>
-        <button onclick="testExpensesAPI()">Test Expenses API</button>
-        <button onclick="testSalarySlipsAPI()">Test Salary Slips API</button>
-        <button onclick="testUsersAPI()">Test Users API</button>
-        <div id="api-result" class="result"></div>
+      <h3>3. API Endpoints Test</h3>
+      <button onclick="testExpensesAPI()">Test Expenses API</button>
+      <button onclick="testSalarySlipsAPI()">Test Salary Slips API</button>
+      <button onclick="testUsersAPI()">Test Users API</button>
+      <div id="api-result" class="result"></div>
     </div>
 
     <!-- Database Test -->
     <div class="test-section">
-        <h3>4. Database Test</h3>
-        <button onclick="testDatabase()">Test Database Operations</button>
-        <div id="db-result" class="result"></div>
+      <h3>4. Database Test</h3>
+      <button onclick="testDatabase()">Test Database Operations</button>
+      <div id="db-result" class="result"></div>
     </div>
 
     <!-- Summary -->
     <div class="test-section">
-        <h3>5. Test Summary</h3>
-        <div id="summary" class="result">Click buttons above to run tests...</div>
+      <h3>5. Test Summary</h3>
+      <div id="summary" class="result">Click buttons above to run tests...</div>
     </div>
 
     <script>
-        let authToken = '';
-        let testResults = {
-            health: false,
-            auth: false,
-            api: false,
-            database: false
-        };
+      let authToken = "";
+      let testResults = {
+        health: false,
+        auth: false,
+        api: false,
+        database: false,
+      };
 
-        async function testHealth() {
-            const resultDiv = document.getElementById('health-result');
-            try {
-                const response = await fetch('http://localhost:5001/api/health');
-                const data = await response.json();
-                
-                if (response.ok && data.status === 'OK') {
-                    resultDiv.innerHTML = '<span style="color: green;">✅ Backend is healthy!</span><br>' + JSON.stringify(data, null, 2);
-                    resultDiv.className = 'result success';
-                    testResults.health = true;
-                } else {
-                    throw new Error('Health check failed');
-                }
-            } catch (error) {
-                resultDiv.innerHTML = '<span style="color: red;">❌ Health check failed: ' + error.message + '</span>';
-                resultDiv.className = 'result error';
-            }
-            updateSummary();
+      async function testHealth() {
+        const resultDiv = document.getElementById("health-result");
+        try {
+          const response = await fetch("http://localhost:5001/api/health");
+          const data = await response.json();
+
+          if (response.ok && data.status === "OK") {
+            resultDiv.innerHTML =
+              '<span style="color: green;">✅ Backend is healthy!</span><br>' +
+              JSON.stringify(data, null, 2);
+            resultDiv.className = "result success";
+            testResults.health = true;
+          } else {
+            throw new Error("Health check failed");
+          }
+        } catch (error) {
+          resultDiv.innerHTML =
+            '<span style="color: red;">❌ Health check failed: ' +
+            error.message +
+            "</span>";
+          resultDiv.className = "result error";
+        }
+        updateSummary();
+      }
+
+      async function testLogin(type) {
+        const resultDiv = document.getElementById("auth-result");
+        const email = document.getElementById(type + "-email").value;
+        const password = document.getElementById(type + "-password").value;
+
+        try {
+          const response = await fetch("http://localhost:5001/api/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.token) {
+            authToken = data.token;
+            resultDiv.innerHTML =
+              '<span style="color: green;">✅ ' +
+              type +
+              " login successful!</span><br>" +
+              "User: " +
+              data.user.name +
+              "<br>" +
+              "Role: " +
+              data.user.role +
+              "<br>" +
+              "Token: " +
+              data.token.substring(0, 20) +
+              "...";
+            resultDiv.className = "result success";
+            testResults.auth = true;
+          } else {
+            throw new Error(data.message || "Login failed");
+          }
+        } catch (error) {
+          resultDiv.innerHTML =
+            '<span style="color: red;">❌ Login failed: ' +
+            error.message +
+            "</span>";
+          resultDiv.className = "result error";
+        }
+        updateSummary();
+      }
+
+      async function testExpensesAPI() {
+        const resultDiv = document.getElementById("api-result");
+        if (!authToken) {
+          resultDiv.innerHTML =
+            '<span style="color: orange;">⚠️ Please login first to test API endpoints</span>';
+          return;
         }
 
-        async function testLogin(type) {
-            const resultDiv = document.getElementById('auth-result');
-            const email = document.getElementById(type + '-email').value;
-            const password = document.getElementById(type + '-password').value;
-            
-            try {
-                const response = await fetch('http://localhost:5001/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.token) {
-                    authToken = data.token;
-                    resultDiv.innerHTML = '<span style="color: green;">✅ ' + type + ' login successful!</span><br>' +
-                        'User: ' + data.user.name + '<br>' +
-                        'Role: ' + data.user.role + '<br>' +
-                        'Token: ' + data.token.substring(0, 20) + '...';
-                    resultDiv.className = 'result success';
-                    testResults.auth = true;
-                } else {
-                    throw new Error(data.message || 'Login failed');
-                }
-            } catch (error) {
-                resultDiv.innerHTML = '<span style="color: red;">❌ Login failed: ' + error.message + '</span>';
-                resultDiv.className = 'result error';
-            }
-            updateSummary();
+        try {
+          const response = await fetch("http://localhost:5001/api/expenses", {
+            headers: {
+              Authorization: "Bearer " + authToken,
+            },
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            resultDiv.innerHTML =
+              '<span style="color: green;">✅ Expenses API working!</span><br>' +
+              "Found " +
+              data.expenses.length +
+              " expenses";
+            resultDiv.className = "result success";
+            testResults.api = true;
+          } else {
+            throw new Error(data.message || "API call failed");
+          }
+        } catch (error) {
+          resultDiv.innerHTML =
+            '<span style="color: red;">❌ Expenses API failed: ' +
+            error.message +
+            "</span>";
+          resultDiv.className = "result error";
+        }
+        updateSummary();
+      }
+
+      async function testSalarySlipsAPI() {
+        if (!authToken) {
+          document.getElementById("api-result").innerHTML =
+            '<span style="color: orange;">⚠️ Please login first</span>';
+          return;
         }
 
-        async function testExpensesAPI() {
-            const resultDiv = document.getElementById('api-result');
-            if (!authToken) {
-                resultDiv.innerHTML = '<span style="color: orange;">⚠️ Please login first to test API endpoints</span>';
-                return;
+        try {
+          const response = await fetch(
+            "http://localhost:5001/api/salary-slips",
+            {
+              headers: {
+                Authorization: "Bearer " + authToken,
+              },
             }
+          );
 
-            try {
-                const response = await fetch('http://localhost:5001/api/expenses', {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken,
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    resultDiv.innerHTML = '<span style="color: green;">✅ Expenses API working!</span><br>' +
-                        'Found ' + data.expenses.length + ' expenses';
-                    resultDiv.className = 'result success';
-                    testResults.api = true;
-                } else {
-                    throw new Error(data.message || 'API call failed');
-                }
-            } catch (error) {
-                resultDiv.innerHTML = '<span style="color: red;">❌ Expenses API failed: ' + error.message + '</span>';
-                resultDiv.className = 'result error';
-            }
-            updateSummary();
+          const data = await response.json();
+
+          if (response.ok) {
+            document.getElementById("api-result").innerHTML +=
+              '<br><span style="color: green;">✅ Salary Slips API working!</span><br>' +
+              "Found " +
+              data.salarySlips.length +
+              " salary slips";
+          }
+        } catch (error) {
+          document.getElementById("api-result").innerHTML +=
+            '<br><span style="color: red;">❌ Salary Slips API failed</span>';
+        }
+      }
+
+      async function testUsersAPI() {
+        if (!authToken) {
+          document.getElementById("api-result").innerHTML =
+            '<span style="color: orange;">⚠️ Please login first</span>';
+          return;
         }
 
-        async function testSalarySlipsAPI() {
-            if (!authToken) {
-                document.getElementById('api-result').innerHTML = '<span style="color: orange;">⚠️ Please login first</span>';
-                return;
-            }
+        try {
+          const response = await fetch("http://localhost:5001/api/users", {
+            headers: {
+              Authorization: "Bearer " + authToken,
+            },
+          });
 
-            try {
-                const response = await fetch('http://localhost:5001/api/salary-slips', {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken,
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('api-result').innerHTML += '<br><span style="color: green;">✅ Salary Slips API working!</span><br>' +
-                        'Found ' + data.salarySlips.length + ' salary slips';
-                }
-            } catch (error) {
-                document.getElementById('api-result').innerHTML += '<br><span style="color: red;">❌ Salary Slips API failed</span>';
-            }
+          const data = await response.json();
+
+          if (response.ok) {
+            document.getElementById("api-result").innerHTML +=
+              '<br><span style="color: green;">✅ Users API working!</span><br>' +
+              "Found " +
+              data.users.length +
+              " users";
+          }
+        } catch (error) {
+          document.getElementById("api-result").innerHTML +=
+            '<br><span style="color: red;">❌ Users API failed</span>';
+        }
+      }
+
+      async function testDatabase() {
+        const resultDiv = document.getElementById("db-result");
+        if (!authToken) {
+          resultDiv.innerHTML =
+            '<span style="color: orange;">⚠️ Please login first to test database operations</span>';
+          return;
         }
 
-        async function testUsersAPI() {
-            if (!authToken) {
-                document.getElementById('api-result').innerHTML = '<span style="color: orange;">⚠️ Please login first</span>';
-                return;
+        try {
+          // Test database by fetching user profile
+          const response = await fetch(
+            "http://localhost:5001/api/users/profile",
+            {
+              headers: {
+                Authorization: "Bearer " + authToken,
+              },
             }
+          );
 
-            try {
-                const response = await fetch('http://localhost:5001/api/users', {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken,
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('api-result').innerHTML += '<br><span style="color: green;">✅ Users API working!</span><br>' +
-                        'Found ' + data.users.length + ' users';
-                }
-            } catch (error) {
-                document.getElementById('api-result').innerHTML += '<br><span style="color: red;">❌ Users API failed</span>';
-            }
+          const data = await response.json();
+
+          if (response.ok && data.user) {
+            resultDiv.innerHTML =
+              '<span style="color: green;">✅ Database operations working!</span><br>' +
+              "Connected to MongoDB<br>" +
+              "User data retrieved successfully";
+            resultDiv.className = "result success";
+            testResults.database = true;
+          } else {
+            throw new Error("Database test failed");
+          }
+        } catch (error) {
+          resultDiv.innerHTML =
+            '<span style="color: red;">❌ Database test failed: ' +
+            error.message +
+            "</span>";
+          resultDiv.className = "result error";
+        }
+        updateSummary();
+      }
+
+      function updateSummary() {
+        const summaryDiv = document.getElementById("summary");
+        const passed = Object.values(testResults).filter((r) => r).length;
+        const total = Object.keys(testResults).length;
+
+        let summaryHTML =
+          "<h4>Test Results: " + passed + "/" + total + " passed</h4>";
+        summaryHTML += "<ul>";
+        summaryHTML +=
+          "<li>Health Check: " + (testResults.health ? "✅" : "❌") + "</li>";
+        summaryHTML +=
+          "<li>Authentication: " + (testResults.auth ? "✅" : "❌") + "</li>";
+        summaryHTML +=
+          "<li>API Endpoints: " + (testResults.api ? "✅" : "❌") + "</li>";
+        summaryHTML +=
+          "<li>Database: " + (testResults.database ? "✅" : "❌") + "</li>";
+        summaryHTML += "</ul>";
+
+        if (passed === total) {
+          summaryHTML +=
+            '<div style="color: green; font-weight: bold;">🎉 All tests passed! The payroll system is working perfectly!</div>';
+          summaryDiv.className = "result success";
+        } else {
+          summaryHTML +=
+            '<div style="color: orange;">⚠️ Some tests failed. Please check the errors above.</div>';
+          summaryDiv.className = "result";
         }
 
-        async function testDatabase() {
-            const resultDiv = document.getElementById('db-result');
-            if (!authToken) {
-                resultDiv.innerHTML = '<span style="color: orange;">⚠️ Please login first to test database operations</span>';
-                return;
-            }
+        summaryDiv.innerHTML = summaryHTML;
+      }
 
-            try {
-                // Test database by fetching user profile
-                const response = await fetch('http://localhost:5001/api/users/profile', {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken,
-                    },
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.user) {
-                    resultDiv.innerHTML = '<span style="color: green;">✅ Database operations working!</span><br>' +
-                        'Connected to MongoDB<br>' +
-                        'User data retrieved successfully';
-                    resultDiv.className = 'result success';
-                    testResults.database = true;
-                } else {
-                    throw new Error('Database test failed');
-                }
-            } catch (error) {
-                resultDiv.innerHTML = '<span style="color: red;">❌ Database test failed: ' + error.message + '</span>';
-                resultDiv.className = 'result error';
-            }
-            updateSummary();
-        }
-
-        function updateSummary() {
-            const summaryDiv = document.getElementById('summary');
-            const passed = Object.values(testResults).filter(r => r).length;
-            const total = Object.keys(testResults).length;
-            
-            let summaryHTML = '<h4>Test Results: ' + passed + '/' + total + ' passed</h4>';
-            summaryHTML += '<ul>';
-            summaryHTML += '<li>Health Check: ' + (testResults.health ? '✅' : '❌') + '</li>';
-            summaryHTML += '<li>Authentication: ' + (testResults.auth ? '✅' : '❌') + '</li>';
-            summaryHTML += '<li>API Endpoints: ' + (testResults.api ? '✅' : '❌') + '</li>';
-            summaryHTML += '<li>Database: ' + (testResults.database ? '✅' : '❌') + '</li>';
-            summaryHTML += '</ul>';
-            
-            if (passed === total) {
-                summaryHTML += '<div style="color: green; font-weight: bold;">🎉 All tests passed! The payroll system is working perfectly!</div>';
-                summaryDiv.className = 'result success';
-            } else {
-                summaryHTML += '<div style="color: orange;">⚠️ Some tests failed. Please check the errors above.</div>';
-                summaryDiv.className = 'result';
-            }
-            
-            summaryDiv.innerHTML = summaryHTML;
-        }
-
-        // Auto-test health on page load
-        window.onload = function() {
-            testHealth();
-        };
+      // Auto-test health on page load
+      window.onload = function () {
+        testHealth();
+      };
     </script>
-</body>
+  </body>
 </html>

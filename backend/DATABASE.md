@@ -5,9 +5,11 @@
 ### Collections Overview
 
 #### 1. `users` Collection
+
 Stores all user accounts (admins and employees)
 
 **Schema:**
+
 ```javascript
 {
   _id: ObjectId,
@@ -36,6 +38,7 @@ Stores all user accounts (admins and employees)
 ```
 
 **Indexes:**
+
 - `email: 1` (unique)
 - `employeeId: 1` (unique, sparse)
 - `role: 1`
@@ -43,9 +46,11 @@ Stores all user accounts (admins and employees)
 ---
 
 #### 2. `expenses` Collection
+
 Stores expense submissions and their status
 
 **Schema:**
+
 ```javascript
 {
   _id: ObjectId,
@@ -77,6 +82,7 @@ Stores expense submissions and their status
 ```
 
 **Indexes:**
+
 - `employeeId: 1, status: 1`
 - `status: 1, createdAt: -1`
 - `expenseDate: -1`
@@ -85,9 +91,11 @@ Stores expense submissions and their status
 ---
 
 #### 3. `salaryslips` Collection
+
 Stores salary slip records
 
 **Schema:**
+
 ```javascript
 {
   _id: ObjectId,
@@ -127,6 +135,7 @@ Stores salary slip records
 ```
 
 **Indexes:**
+
 - `employeeId: 1, month: 1, year: 1` (unique compound)
 - `status: 1, createdAt: -1`
 - `year: -1, month: -1`
@@ -134,9 +143,11 @@ Stores salary slip records
 ---
 
 #### 4. `notifications` Collection
+
 Stores in-app notifications
 
 **Schema:**
+
 ```javascript
 {
   _id: ObjectId,
@@ -160,6 +171,7 @@ Stores in-app notifications
 ```
 
 **Indexes:**
+
 - `userId: 1, read: 1, createdAt: -1`
 - `type: 1, category: 1`
 - `priority: 1, createdAt: -1`
@@ -172,6 +184,7 @@ Stores in-app notifications
 ### 1. Install MongoDB
 
 **Option A: Local Installation (macOS)**
+
 ```bash
 # Install MongoDB using Homebrew
 brew tap mongodb/brew
@@ -184,6 +197,7 @@ brew services start mongodb-community
 ```
 
 **Option B: MongoDB Atlas (Cloud)**
+
 1. Visit [MongoDB Atlas](https://cloud.mongodb.com)
 2. Create a free cluster
 3. Get connection string
@@ -192,6 +206,7 @@ brew services start mongodb-community
 ### 2. Environment Configuration
 
 Update your `.env` file:
+
 ```env
 # For local MongoDB
 MONGODB_URI=mongodb://localhost:27017/payroll_system
@@ -205,11 +220,13 @@ DB_NAME=payroll_system
 ### 3. Seed Database
 
 Run the seed script to create initial data:
+
 ```bash
 npm run seed
 ```
 
 This will create:
+
 - 1 Admin user
 - 3 Sample employees
 - All necessary indexes
@@ -219,10 +236,12 @@ This will create:
 After seeding:
 
 **Admin:**
+
 - Email: `admin@payrollsystem.com`
 - Password: `admin123`
 
 **Employees:**
+
 - Email: `john.doe@company.com` / Password: `password123`
 - Email: `jane.smith@company.com` / Password: `password123`
 - Email: `mike.johnson@company.com` / Password: `password123`
@@ -244,21 +263,25 @@ After seeding:
 ## Sample Queries
 
 ### Get all employees in a department
+
 ```javascript
-db.users.find({ role: "employee", department: "Engineering" })
+db.users.find({ role: 'employee', department: 'Engineering' });
 ```
 
 ### Get pending expenses
+
 ```javascript
-db.expenses.find({ status: "pending" })
+db.expenses.find({ status: 'pending' });
 ```
 
 ### Get salary slips for a specific year
+
 ```javascript
-db.salaryslips.find({ year: 2024 })
+db.salaryslips.find({ year: 2024 });
 ```
 
 ### Get unread notifications for a user
+
 ```javascript
-db.notifications.find({ userId: ObjectId("..."), read: false })
+db.notifications.find({ userId: ObjectId('...'), read: false });
 ```

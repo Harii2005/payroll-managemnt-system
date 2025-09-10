@@ -22,14 +22,14 @@ const createDefaultAdmin = async () => {
       role: 'admin',
       department: 'IT',
       position: 'System Administrator',
-      isActive: true
+      isActive: true,
     });
 
     await admin.save();
     console.log('Default admin user created successfully');
     console.log(`Email: ${adminEmail}`);
     console.log(`Password: ${adminPassword}`);
-    
+
     return admin;
   } catch (error) {
     console.error('Error creating default admin:', error);
@@ -39,7 +39,8 @@ const createDefaultAdmin = async () => {
 
 // Generate random password
 const generateRandomPassword = (length = 8) => {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const charset =
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let password = '';
   for (let i = 0; i < length; i++) {
     password += charset.charAt(Math.floor(Math.random() * charset.length));
@@ -52,7 +53,7 @@ const formatCurrency = (amount, currency = 'INR') => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: currency,
-    minimumFractionDigits: 2
+    minimumFractionDigits: 2,
   }).format(amount);
 };
 
@@ -61,7 +62,7 @@ const formatDate = (date, locale = 'en-IN') => {
   return new Date(date).toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
   });
 };
 
@@ -69,8 +70,9 @@ const formatDate = (date, locale = 'en-IN') => {
 const getFinancialYear = (date = new Date()) => {
   const year = date.getFullYear();
   const month = date.getMonth(); // 0-11
-  
-  if (month >= 3) { // April to March
+
+  if (month >= 3) {
+    // April to March
     return `${year}-${(year + 1).toString().slice(-2)}`;
   } else {
     return `${year - 1}-${year.toString().slice(-2)}`;
@@ -80,8 +82,18 @@ const getFinancialYear = (date = new Date()) => {
 // Get month name
 const getMonthName = (month) => {
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
   return months[month - 1] || '';
 };
@@ -106,7 +118,7 @@ const getWorkingDaysInMonth = (month, year) => {
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month - 1, day);
     const dayOfWeek = date.getDay();
-    
+
     // Count Monday to Friday as working days (1-5)
     if (dayOfWeek >= 1 && dayOfWeek <= 5) {
       workingDays++;
@@ -144,7 +156,7 @@ const generateUniqueFilename = (originalName) => {
   const randomString = Math.random().toString(36).substring(2, 15);
   const extension = originalName.split('.').pop();
   const nameWithoutExt = originalName.replace(`.${extension}`, '');
-  
+
   return `${sanitizeFilename(nameWithoutExt)}_${timestamp}_${randomString}.${extension}`;
 };
 
@@ -162,7 +174,7 @@ const getPaginationData = (page, limit, total) => {
     total,
     skip,
     hasNext: currentPage < totalPages,
-    hasPrev: currentPage > 1
+    hasPrev: currentPage > 1,
   };
 };
 
@@ -180,7 +192,7 @@ const cleanupOldFiles = (directoryPath, daysOld = 30) => {
 
   const files = fs.readdirSync(directoryPath);
 
-  files.forEach(file => {
+  files.forEach((file) => {
     const filePath = path.join(directoryPath, file);
     const stats = fs.statSync(filePath);
 
@@ -195,7 +207,7 @@ const cleanupOldFiles = (directoryPath, daysOld = 30) => {
 const sendErrorResponse = (res, statusCode, message, errors = null) => {
   const response = {
     success: false,
-    message
+    message,
   };
 
   if (errors) {
@@ -206,11 +218,16 @@ const sendErrorResponse = (res, statusCode, message, errors = null) => {
 };
 
 // Success response helper
-const sendSuccessResponse = (res, data, message = 'Operation successful', statusCode = 200) => {
+const sendSuccessResponse = (
+  res,
+  data,
+  message = 'Operation successful',
+  statusCode = 200
+) => {
   return res.status(statusCode).json({
     success: true,
     message,
-    data
+    data,
   });
 };
 
@@ -238,5 +255,5 @@ module.exports = {
   cleanupOldFiles,
   sendErrorResponse,
   sendSuccessResponse,
-  asyncWrapper
+  asyncWrapper,
 };

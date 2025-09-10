@@ -12,7 +12,7 @@ const seedDatabase = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    
+
     console.log('Connected to MongoDB');
 
     // Clear existing data (optional - remove this in production)
@@ -27,7 +27,7 @@ const seedDatabase = async () => {
       role: 'admin',
       department: 'IT',
       position: 'System Administrator',
-      isActive: true
+      isActive: true,
     });
 
     await adminUser.save();
@@ -44,13 +44,13 @@ const seedDatabase = async () => {
         position: 'Software Developer',
         salary: {
           basic: 50000,
-          allowances: 10000
+          allowances: 10000,
         },
         bankDetails: {
           accountNumber: '1234567890',
           bankName: 'State Bank of India',
-          ifscCode: 'SBIN0001234'
-        }
+          ifscCode: 'SBIN0001234',
+        },
       },
       {
         name: 'Jane Smith',
@@ -61,13 +61,13 @@ const seedDatabase = async () => {
         position: 'Marketing Manager',
         salary: {
           basic: 45000,
-          allowances: 8000
+          allowances: 8000,
         },
         bankDetails: {
           accountNumber: '0987654321',
           bankName: 'HDFC Bank',
-          ifscCode: 'HDFC0001234'
-        }
+          ifscCode: 'HDFC0001234',
+        },
       },
       {
         name: 'Mike Johnson',
@@ -78,25 +78,35 @@ const seedDatabase = async () => {
         position: 'HR Specialist',
         salary: {
           basic: 40000,
-          allowances: 7000
+          allowances: 7000,
         },
         bankDetails: {
           accountNumber: '1122334455',
           bankName: 'ICICI Bank',
-          ifscCode: 'ICIC0001234'
-        }
-      }
+          ifscCode: 'ICIC0001234',
+        },
+      },
     ];
 
     for (const employeeData of employees) {
       const employee = new User(employeeData);
       await employee.save();
-      console.log('✅ Employee created:', employee.name, '- ID:', employee.employeeId);
+      console.log(
+        '✅ Employee created:',
+        employee.name,
+        '- ID:',
+        employee.employeeId
+      );
     }
 
     console.log('\n🎉 Database seeded successfully!');
     console.log('\n📋 Login Credentials:');
-    console.log('Admin:', process.env.ADMIN_EMAIL || 'admin@payrollsystem.com', '/ Password:', process.env.ADMIN_PASSWORD || 'admin123');
+    console.log(
+      'Admin:',
+      process.env.ADMIN_EMAIL || 'admin@payrollsystem.com',
+      '/ Password:',
+      process.env.ADMIN_PASSWORD || 'admin123'
+    );
     console.log('Employee: john.doe@company.com / Password: password123');
     console.log('Employee: jane.smith@company.com / Password: password123');
     console.log('Employee: mike.johnson@company.com / Password: password123');

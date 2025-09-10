@@ -28,9 +28,9 @@ const sendSalarySlipEmail = async (salarySlip, pdfPath) => {
         {
           filename: `SalarySlip_${salarySlip.employeeId.employeeId}_${salarySlip.monthName}_${salarySlip.year}.pdf`,
           path: pdfPath,
-          contentType: 'application/pdf'
-        }
-      ]
+          contentType: 'application/pdf',
+        },
+      ],
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -47,15 +47,20 @@ const sendExpenseNotificationEmail = async (expense, status, adminUser) => {
   try {
     const transporter = createTransporter();
 
-    const subject = status === 'approved' 
-      ? `Expense Approved - ${expense.title}`
-      : `Expense Rejected - ${expense.title}`;
+    const subject =
+      status === 'approved'
+        ? `Expense Approved - ${expense.title}`
+        : `Expense Rejected - ${expense.title}`;
 
     const mailOptions = {
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: expense.employeeId.email,
       subject: subject,
-      html: generateExpenseNotificationEmailTemplate(expense, status, adminUser)
+      html: generateExpenseNotificationEmailTemplate(
+        expense,
+        status,
+        adminUser
+      ),
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -76,7 +81,7 @@ const sendWelcomeEmail = async (user, tempPassword = null) => {
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: user.email,
       subject: 'Welcome to Payroll Management System',
-      html: generateWelcomeEmailTemplate(user, tempPassword)
+      html: generateWelcomeEmailTemplate(user, tempPassword),
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -99,7 +104,7 @@ const sendPasswordResetEmail = async (user, resetToken) => {
       from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to: user.email,
       subject: 'Password Reset Request',
-      html: generatePasswordResetEmailTemplate(user, resetUrl)
+      html: generatePasswordResetEmailTemplate(user, resetUrl),
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -149,12 +154,16 @@ const generateSalarySlipEmailTemplate = (salarySlip) => {
                     <p><strong>Net Salary:</strong> <span class="amount">₹${salarySlip.netSalary.toLocaleString('en-IN')}</span></p>
                 </div>
                 
-                ${salarySlip.notes ? `
+                ${
+                  salarySlip.notes
+                    ? `
                 <div class="details">
                     <h3>Notes</h3>
                     <p>${salarySlip.notes}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
                 <p>Please find your detailed salary slip attached as a PDF document.</p>
                 
@@ -172,7 +181,11 @@ const generateSalarySlipEmailTemplate = (salarySlip) => {
 };
 
 // Generate expense notification email template
-const generateExpenseNotificationEmailTemplate = (expense, status, adminUser) => {
+const generateExpenseNotificationEmailTemplate = (
+  expense,
+  status,
+  adminUser
+) => {
   const statusColor = status === 'approved' ? '#28a745' : '#dc3545';
   const statusText = status === 'approved' ? 'APPROVED' : 'REJECTED';
 
@@ -214,12 +227,16 @@ const generateExpenseNotificationEmailTemplate = (expense, status, adminUser) =>
                     <p><strong>Description:</strong> ${expense.description}</p>
                 </div>
                 
-                ${status === 'rejected' && expense.rejectionReason ? `
+                ${
+                  status === 'rejected' && expense.rejectionReason
+                    ? `
                 <div class="details">
                     <h3>Rejection Reason</h3>
                     <p>${expense.rejectionReason}</p>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
                 <p>You can view more details by logging into the payroll system.</p>
             </div>
@@ -273,7 +290,9 @@ const generateWelcomeEmailTemplate = (user, tempPassword) => {
                     ${user.department ? `<p><strong>Department:</strong> ${user.department}</p>` : ''}
                 </div>
                 
-                ${tempPassword ? `
+                ${
+                  tempPassword
+                    ? `
                 <div class="details">
                     <h3>Login Credentials</h3>
                     <p><strong>Email:</strong> <span class="credential">${user.email}</span></p>
@@ -283,22 +302,28 @@ const generateWelcomeEmailTemplate = (user, tempPassword) => {
                         <strong>Important:</strong> Please change your password after your first login for security purposes.
                     </div>
                 </div>
-                ` : ''}
+                `
+                    : ''
+                }
                 
                 <div class="details">
                     <h3>System Features</h3>
                     <ul>
-                        ${user.role === 'employee' ? `
+                        ${
+                          user.role === 'employee'
+                            ? `
                         <li>Submit and track expense claims</li>
                         <li>View and download salary slips</li>
                         <li>Receive notifications about expense approvals</li>
                         <li>Update your profile and bank details</li>
-                        ` : `
+                        `
+                            : `
                         <li>Manage employee records</li>
                         <li>Generate and send salary slips</li>
                         <li>Review and approve expense claims</li>
                         <li>Access comprehensive reports and analytics</li>
-                        `}
+                        `
+                        }
                     </ul>
                 </div>
                 
@@ -393,5 +418,5 @@ module.exports = {
   sendExpenseNotificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
-  testEmailConfiguration
+  testEmailConfiguration,
 };
